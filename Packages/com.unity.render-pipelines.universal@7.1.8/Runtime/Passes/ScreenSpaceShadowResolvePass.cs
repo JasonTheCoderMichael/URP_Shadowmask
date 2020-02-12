@@ -24,9 +24,16 @@ namespace UnityEngine.Rendering.Universal.Internal
             m_RenderTextureDescriptor = baseDescriptor;
             m_RenderTextureDescriptor.depthBufferBits = 0;
             m_RenderTextureDescriptor.msaaSamples = 1;
-            m_RenderTextureDescriptor.colorFormat = RenderingUtils.SupportsRenderTextureFormat(RenderTextureFormat.R8)
-                ? RenderTextureFormat.R8
+
+            // PWRD* majiao, 使用RG16格式，g通道存储 Distance Shadowmaskģ 模式时Shadowmask的范围 //
+            //m_RenderTextureDescriptor.colorFormat = RenderingUtils.SupportsRenderTextureFormat(RenderTextureFormat.R8)
+                //? RenderTextureFormat.R8
+                //: RenderTextureFormat.ARGB32;
+
+            m_RenderTextureDescriptor.colorFormat = RenderingUtils.SupportsRenderTextureFormat(RenderTextureFormat.RG16)
+                ? RenderTextureFormat.RG16
                 : RenderTextureFormat.ARGB32;
+            // PWRD* majiao //
         }
 
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)

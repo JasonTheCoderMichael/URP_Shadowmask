@@ -77,7 +77,18 @@ Shader "Hidden/Universal Render Pipeline/ScreenSpaceShadows"
             // Screenspace shadowmap is only used for directional lights which use orthogonal projection.
             ShadowSamplingData shadowSamplingData = GetMainLightShadowSamplingData();
             half4 shadowParams = GetMainLightShadowParams();
-            return SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture), coords, shadowSamplingData, shadowParams, false);
+
+            // PWRD* majiao //
+            // return SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture), coords, shadowSamplingData, shadowParams, false);
+            
+            // float mask = BEYOND_SHADOW_FAR(coords) ? 1 : 0;
+            float transition = 0.2;
+            float mask1 = smoothstep(1-transition, 1, coords.z);
+            float mask2 = 1 - smoothstep(0, transition, coords.z);
+            float mask = max(mask1, mask2);
+            float shadow = SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture), coords, shadowSamplingData, shadowParams, false);
+            return float4(shadow, mask, 0, 0);
+            // PWRD* majiao //
         }
 
         ENDHLSL

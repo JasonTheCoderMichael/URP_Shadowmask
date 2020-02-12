@@ -105,6 +105,7 @@ namespace UnityEngine.Rendering.Universal
 
         // PWRD* majiao //
         public static readonly string MixedLightingShadowmask = "SHADOWS_SHADOWMASK";
+        public static readonly string MixedLighting_DistanceShadowmask = "SHADOWS_DISTANCE_SHADOWMASK";
         // PWRD* majiao //
 
         public static readonly string DepthNoMsaa = "_DEPTH_NO_MSAA";

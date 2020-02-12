@@ -35,7 +35,7 @@ struct InputData
     half3   bakedGI;
 
     // PWRD* majiao //
-#if defined(SHADOWS_SHADOWMASK) && defined(LIGHTMAP_ON)
+#if (defined(SHADOWS_SHADOWMASK) || defined(SHADOWS_DISTANCE_SHADOWMASK)) && defined(LIGHTMAP_ON)
     half4   bakedAtten;
 #endif
     // PWRD* majiao //

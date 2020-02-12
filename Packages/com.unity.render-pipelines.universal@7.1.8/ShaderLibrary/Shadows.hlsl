@@ -124,6 +124,25 @@ half SampleScreenSpaceShadowmap(float4 shadowCoord)
     return attenuation;
 }
 
+// PWRD* majiao //
+half2 SampleScreenSpaceShadowmap_Mask(float4 shadowCoord, out float mask)
+{
+    shadowCoord.xy /= shadowCoord.w;
+
+    // The stereo transform has to happen after the manual perspective divide
+    shadowCoord.xy = UnityStereoTransformScreenSpaceTex(shadowCoord.xy);
+
+#if defined(UNITY_STEREO_INSTANCING_ENABLED) || defined(UNITY_STEREO_MULTIVIEW_ENABLED)
+    half2 attenAndMask = SAMPLE_TEXTURE2D_ARRAY(_ScreenSpaceShadowmapTexture, sampler_ScreenSpaceShadowmapTexture, shadowCoord.xy, unity_StereoEyeIndex).rg;
+#else
+    half2 attenAndMask = SAMPLE_TEXTURE2D(_ScreenSpaceShadowmapTexture, sampler_ScreenSpaceShadowmapTexture, shadowCoord.xy).rg;
+#endif
+
+    mask = attenAndMask.g;
+    return attenAndMask.r;
+}
+//PWRD* majiao //
+
 real SampleShadowmapFiltered(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord, ShadowSamplingData samplingData)
 {
     real attenuation;
@@ -219,10 +238,25 @@ half MainLightRealtimeShadow(float4 shadowCoord)
 }
 
 // PWRD* majiao //
+half MainLightRealtimeShadow(float4 shadowCoord, out float mask)
+{
+#if !defined(_MAIN_LIGHT_SHADOWS) || defined(_RECEIVE_SHADOWS_OFF)
+    return 1.0h;
+#endif
+
+#if SHADOWS_SCREEN
+    return SampleScreenSpaceShadowmap_Mask(shadowCoord, mask);
+#else
+    ShadowSamplingData shadowSamplingData = GetMainLightShadowSamplingData();
+    half4 shadowParams = GetMainLightShadowParams();
+    return SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture), shadowCoord, shadowSamplingData, shadowParams, false);
+#endif
+}
+
 half GetAdditionalLightShadowStrenth(int lightIndex); //declare
 half AdditionalLightBakedShadow(int lightIndex, half4 shadowmask)
 {
-#if defined(SHADOWS_SHADOWMASK) && defined(LIGHTMAP_ON)
+#if (defined(SHADOWS_SHADOWMASK) || defined(SHADOWS_DISTANCE_SHADOWMASK)) && defined(LIGHTMAP_ON)
     int chanel = _AdditionalLightsSpotDir[lightIndex].w;
     if (chanel >= 1 && chanel <= 4)
     {

@@ -95,7 +95,13 @@ namespace UnityEngine.Rendering.Universal.Internal
             // PWRD* majiao //
             CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MixedLightingShadowmask,
                renderingData.lightData.supportsMixedLighting &&
-               m_MixedLightingSetup == MixedLightingSetup.ShadowMask);
+               m_MixedLightingSetup == MixedLightingSetup.ShadowMask &&
+               QualitySettings.shadowmaskMode == ShadowmaskMode.Shadowmask);
+
+            CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MixedLighting_DistanceShadowmask,
+                renderingData.lightData.supportsMixedLighting &&
+                m_MixedLightingSetup == MixedLightingSetup.ShadowMask &&
+                QualitySettings.shadowmaskMode == ShadowmaskMode.DistanceShadowmask);
             // PWRD* majiao //
 
             context.ExecuteCommandBuffer(cmd);
