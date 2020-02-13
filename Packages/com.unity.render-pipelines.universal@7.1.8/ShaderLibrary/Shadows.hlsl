@@ -57,6 +57,12 @@ float4 _ShadowBias; // x: depth bias, y: normal bias
 
 #define BEYOND_SHADOW_FAR(shadowCoord) shadowCoord.z <= 0.0 || shadowCoord.z >= 1.0
 
+float IsInRange(float3 coord)
+{
+    float3 result = coord > 0 && coord < 1;
+    return all(result);
+}
+
 struct ShadowSamplingData
 {
     half4 shadowOffset0;
@@ -240,6 +246,8 @@ half MainLightRealtimeShadow(float4 shadowCoord)
 // PWRD* majiao //
 half MainLightRealtimeShadow(float4 shadowCoord, out float mask)
 {
+    mask = 1;
+
 #if !defined(_MAIN_LIGHT_SHADOWS) || defined(_RECEIVE_SHADOWS_OFF)
     return 1.0h;
 #endif
