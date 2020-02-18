@@ -299,6 +299,9 @@ namespace UnityEngine.Rendering.Universal
             if (additionalCameraData != null)
             {
                 cameraData.maxShadowDistance = (additionalCameraData.renderShadows) ? cameraData.maxShadowDistance : 0.0f;
+                // PWRD* majiao //
+                cameraData.UseScreenSpaceShadow = additionalCameraData.useScreenSpaceShadow;
+                // PWRD* majiao //
                 cameraData.requiresDepthTexture = additionalCameraData.requiresDepthTexture;
                 cameraData.requiresOpaqueTexture = additionalCameraData.requiresColorTexture;
                 cameraData.volumeLayerMask = additionalCameraData.volumeLayerMask;
@@ -389,7 +392,7 @@ namespace UnityEngine.Rendering.Universal
             renderingData.cullResults = cullResults;
             renderingData.cameraData = cameraData;
             InitializeLightData(settings, visibleLights, mainLightIndex, out renderingData.lightData);
-            InitializeShadowData(settings, visibleLights, mainLightCastShadows, additionalLightsCastShadows && !renderingData.lightData.shadeAdditionalLightsPerVertex, out renderingData.shadowData);
+            InitializeShadowData(settings, visibleLights, mainLightCastShadows, additionalLightsCastShadows && !renderingData.lightData.shadeAdditionalLightsPerVertex, cameraData.UseScreenSpaceShadow, out renderingData.shadowData);
             InitializePostProcessingData(settings, out renderingData.postProcessingData);
             renderingData.supportsDynamicBatching = settings.supportsDynamicBatching;
             renderingData.perObjectData = GetPerObjectLightFlags(renderingData.lightData.additionalLightsCount);
@@ -398,7 +401,7 @@ namespace UnityEngine.Rendering.Universal
             renderingData.killAlphaInFinalBlit = !Graphics.preserveFramebufferAlpha && PlatformNeedsToKillAlpha() && !isOffscreenCamera;
         }
 
-        static void InitializeShadowData(UniversalRenderPipelineAsset settings, NativeArray<VisibleLight> visibleLights, bool mainLightCastShadows, bool additionalLightsCastShadows, out ShadowData shadowData)
+        static void InitializeShadowData(UniversalRenderPipelineAsset settings, NativeArray<VisibleLight> visibleLights, bool mainLightCastShadows, bool additionalLightsCastShadows, bool useScreenSpaceShadow, out ShadowData shadowData)
         {
             m_ShadowBiasData.Clear();
 
@@ -429,7 +432,13 @@ namespace UnityEngine.Rendering.Universal
             shadowData.supportsMainLightShadows = SystemInfo.supportsShadows && settings.supportsMainLightShadows && mainLightCastShadows;
 
             // we resolve shadows in screenspace when cascades are enabled to save ALU as computing cascade index + shadowCoord on fragment is expensive
-            shadowData.requiresScreenSpaceShadowResolve = shadowData.supportsMainLightShadows && supportsScreenSpaceShadows && settings.shadowCascadeOption != ShadowCascadesOption.NoCascades;
+            // PWRD* majiao //
+            //shadowData.requiresScreenSpaceShadowResolve = shadowData.supportsMainLightShadows && supportsScreenSpaceShadows && settings.shadowCascadeOption != ShadowCascadesOption.NoCascades;
+            shadowData.requiresScreenSpaceShadowResolve = shadowData.supportsMainLightShadows && 
+                                                          supportsScreenSpaceShadows && 
+                                                          settings.shadowCascadeOption != ShadowCascadesOption.NoCascades &&
+                                                          useScreenSpaceShadow;
+            // PWRD* majiao //
 
             int shadowCascadesCount;
             switch (settings.shadowCascadeOption)

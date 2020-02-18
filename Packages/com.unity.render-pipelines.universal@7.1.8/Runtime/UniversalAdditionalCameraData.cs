@@ -78,6 +78,12 @@ namespace UnityEngine.Rendering.Universal
         [FormerlySerializedAs("renderShadows"), SerializeField]
         bool m_RenderShadows = true;
 
+        // PWRD* majiao //
+        [Tooltip("If enabled shadows will use ShadowCascade,otherwise shadow will use ordinary shadow.")]
+        [FormerlySerializedAs("useShadowCascade"), SerializeField]
+        bool m_useScreenSpaceShadow = true;
+        // PWRD* majiao //
+
         [Tooltip("If enabled depth texture will render for this camera bound as _CameraDepthTexture.")]
         [SerializeField]
         CameraOverrideOption m_RequiresDepthTextureOption = CameraOverrideOption.UsePipelineSettings;
@@ -128,6 +134,14 @@ namespace UnityEngine.Rendering.Universal
             get => m_RenderShadows;
             set => m_RenderShadows = value;
         }
+
+        // PWRD* majiao, 在RenderPipelineAsset中Cascades选项时不是"No Cascade"时才有效 //
+        public bool useScreenSpaceShadow
+        {
+            get => m_useScreenSpaceShadow;
+            set => m_useScreenSpaceShadow = value;
+        }
+        // PWRD* majiao //
 
         public CameraOverrideOption requiresDepthOption
         {

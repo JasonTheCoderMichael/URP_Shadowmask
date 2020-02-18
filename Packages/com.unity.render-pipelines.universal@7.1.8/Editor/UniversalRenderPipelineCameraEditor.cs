@@ -142,6 +142,10 @@ namespace UnityEditor.Rendering.Universal
         SavedBool m_RenderingSettingsFoldout;
         SavedBool m_StackSettingsFoldout;
 
+        //PWRD* majiao //
+        SavedBool m_useScreenSpaceShadow;
+        //PWRD* majiao //
+
         // Animation Properties
         public bool isSameClearFlags { get { return !settings.clearFlags.hasMultipleDifferentValues; } }
         public bool isSameOrthographic { get { return !settings.orthographic.hasMultipleDifferentValues; } }
@@ -157,6 +161,9 @@ namespace UnityEditor.Rendering.Universal
         readonly AnimBool m_ShowTargetEyeAnim = new AnimBool();
 
         SerializedProperty m_AdditionalCameraDataRenderShadowsProp;
+        // PWRD* majiao //
+        SerializedProperty m_AdditionalCameraDataUseCascadeShadowsProp;
+        // PWRD* majiao //
         SerializedProperty m_AdditionalCameraDataRenderDepthProp;
         SerializedProperty m_AdditionalCameraDataRenderOpaqueProp;
         SerializedProperty m_AdditionalCameraDataRendererProp;
@@ -224,6 +231,9 @@ namespace UnityEditor.Rendering.Universal
             m_OutputSettingsFoldout = new SavedBool($"{target.GetType()}.OutputSettingsFoldout", false);
             m_RenderingSettingsFoldout = new SavedBool($"{target.GetType()}.RenderingSettingsFoldout", false);
             m_StackSettingsFoldout = new SavedBool($"{target.GetType()}.StackSettingsFoldout", false);
+            // PWRD* majiao //
+            m_useScreenSpaceShadow = new SavedBool($"{target.GetType()}.UseShadowCascade", false);
+            // PWRD* majiao //
             m_AdditionalCameraData = camera.gameObject.GetComponent<UniversalAdditionalCameraData>();
             m_ErrorIcon = EditorGUIUtility.Load("icons/console.erroricon.sml.png") as Texture2D;
             validCameras.Clear();
@@ -397,6 +407,9 @@ namespace UnityEditor.Rendering.Universal
 
             m_AdditionalCameraDataSO = new SerializedObject(additionalCameraData);
             m_AdditionalCameraDataRenderShadowsProp = m_AdditionalCameraDataSO.FindProperty("m_RenderShadows");
+            // PWRD* majiao //
+            m_AdditionalCameraDataUseCascadeShadowsProp = m_AdditionalCameraDataSO.FindProperty("m_useScreenSpaceShadow");
+            // PWRD* majiao //
             m_AdditionalCameraDataRenderDepthProp = m_AdditionalCameraDataSO.FindProperty("m_RequiresDepthTextureOption");
             m_AdditionalCameraDataRenderOpaqueProp = m_AdditionalCameraDataSO.FindProperty("m_RequiresOpaqueTextureOption");
             m_AdditionalCameraDataRendererProp = m_AdditionalCameraDataSO.FindProperty("m_RendererIndex");
@@ -1028,6 +1041,22 @@ namespace UnityEditor.Rendering.Universal
                 m_AdditionalCameraDataSO.ApplyModifiedProperties();
             }
             EditorGUI.EndProperty();
+
+            // PWRD* majiao //
+            if (selectedValueShadows)
+            {
+                Rect useScreenSpaceShadowRect = EditorGUILayout.GetControlRect(true);
+                EditorGUI.BeginProperty(useScreenSpaceShadowRect, Styles.renderingShadows, m_AdditionalCameraDataUseCascadeShadowsProp);
+                EditorGUI.BeginChangeCheck();
+                m_useScreenSpaceShadow.value = EditorGUI.Toggle(useScreenSpaceShadowRect, new GUIContent("Use Shadow Cascade"), m_useScreenSpaceShadow.value);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    m_AdditionalCameraDataUseCascadeShadowsProp.boolValue = m_useScreenSpaceShadow.value;
+                    m_AdditionalCameraDataSO.ApplyModifiedProperties();
+                }
+                EditorGUI.EndProperty();
+            }
+            // PWRD* majiao //
         }
 
         void DrawVRSettings()

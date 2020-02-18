@@ -69,6 +69,10 @@ namespace UnityEngine.Rendering.Universal
         public bool isDitheringEnabled;
         public AntialiasingMode antialiasing;
         public AntialiasingQuality antialiasingQuality;
+
+        // PWRD* majiao //
+        public bool UseScreenSpaceShadow;
+        // PWRD* majiao //
     }
 
     [MovedFrom("UnityEngine.Rendering.LWRP")] public struct ShadowData
