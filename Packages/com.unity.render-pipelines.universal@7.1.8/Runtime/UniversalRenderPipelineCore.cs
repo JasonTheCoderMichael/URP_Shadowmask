@@ -71,7 +71,7 @@ namespace UnityEngine.Rendering.Universal
         public AntialiasingQuality antialiasingQuality;
 
         // PWRD* majiao //
-        public bool UseScreenSpaceShadow;
+        public bool useScreenSpaceShadow;
         // PWRD* majiao //
     }
 
@@ -89,6 +89,9 @@ namespace UnityEngine.Rendering.Universal
         public bool supportsSoftShadows;
         public int shadowmapDepthBufferBits;
         public List<Vector4> bias;
+        // PWRD* majiao //
+        public bool useScreenSpaceShadow;
+        // PWRD* majiao //
     }
 
     public struct PostProcessingData

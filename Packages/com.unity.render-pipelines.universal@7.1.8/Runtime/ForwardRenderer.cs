@@ -116,7 +116,12 @@ namespace UnityEngine.Rendering.Universal
 
             bool mainLightShadows = m_MainLightShadowCasterPass.Setup(ref renderingData);
             bool additionalLightShadows = m_AdditionalLightsShadowCasterPass.Setup(ref renderingData);
-            bool resolveShadowsInScreenSpace = mainLightShadows && renderingData.shadowData.requiresScreenSpaceShadowResolve;
+            // PWRD* majiao //
+            //bool resolveShadowsInScreenSpace = mainLightShadows && renderingData.shadowData.requiresScreenSpaceShadowResolve;
+            bool resolveShadowsInScreenSpace = mainLightShadows &&
+                                               renderingData.shadowData.requiresScreenSpaceShadowResolve &&
+                                               renderingData.shadowData.useScreenSpaceShadow;
+            // PWRD* majiao //
 
             // Depth prepass is generated in the following cases:
             // - We resolve shadows in screen space
