@@ -81,7 +81,7 @@ Shader "Hidden/Universal Render Pipeline/ScreenSpaceShadows"
             // PWRD* majiao //
             // return SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture), coords, shadowSamplingData, shadowParams, false);
             
-            float mask = IsInRange(coords) ? 0 : 1; // BEYOND_SHADOW_FAR(coords) ? 1 : 0;
+            float mask = IsInRange(coords.xyz) ? 0 : 1; // BEYOND_SHADOW_FAR(coords) ? 1 : 0;
             
             // float transition = 0.2;
             // float mask1 = smoothstep(1-transition, 1, coords.z);

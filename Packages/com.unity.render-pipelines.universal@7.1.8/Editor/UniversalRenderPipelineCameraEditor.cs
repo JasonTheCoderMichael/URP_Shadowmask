@@ -1048,7 +1048,7 @@ namespace UnityEditor.Rendering.Universal
                 Rect useScreenSpaceShadowRect = EditorGUILayout.GetControlRect(true);
                 EditorGUI.BeginProperty(useScreenSpaceShadowRect, Styles.renderingShadows, m_AdditionalCameraDataUseCascadeShadowsProp);
                 EditorGUI.BeginChangeCheck();
-                m_useScreenSpaceShadow.value = EditorGUI.Toggle(useScreenSpaceShadowRect, new GUIContent("Use Shadow Cascade"), m_useScreenSpaceShadow.value);
+                m_useScreenSpaceShadow.value = EditorGUI.Toggle(useScreenSpaceShadowRect, new GUIContent("Screen Space Shadow"), m_useScreenSpaceShadow.value);
                 if (EditorGUI.EndChangeCheck())
                 {
                     m_AdditionalCameraDataUseCascadeShadowsProp.boolValue = m_useScreenSpaceShadow.value;

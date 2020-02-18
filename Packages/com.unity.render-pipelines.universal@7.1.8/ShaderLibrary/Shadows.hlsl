@@ -131,7 +131,7 @@ half SampleScreenSpaceShadowmap(float4 shadowCoord)
 }
 
 // PWRD* majiao //
-half2 SampleScreenSpaceShadowmap_Mask(float4 shadowCoord, out float mask)
+half SampleScreenSpaceShadowmap_Mask(float4 shadowCoord, out float mask)
 {
     shadowCoord.xy /= shadowCoord.w;
 
