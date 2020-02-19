@@ -260,6 +260,7 @@ half MainLightRealtimeShadow(float4 shadowCoord)
 #endif
 }
 
+// PWRD* majiao //
 half GetAdditionalLightShadowStrenth(int lightIndex); //declare
 half AdditionalLightBakedShadow(int lightIndex, half4 shadowmask)
 {

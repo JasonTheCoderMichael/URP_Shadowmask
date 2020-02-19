@@ -241,12 +241,12 @@ namespace UnityEngine.Rendering.Universal
                 reflectionProbeModes = SupportedRenderingFeatures.ReflectionProbeModes.None,
                 defaultMixedLightingModes = SupportedRenderingFeatures.LightmapMixedBakeModes.Subtractive,
 
-                //PWRD* majiao //
+                // PWRD* majiao //
                 //mixedLightingModes = SupportedRenderingFeatures.LightmapMixedBakeModes.Subtractive | SupportedRenderingFeatures.LightmapMixedBakeModes.IndirectOnly,
                 mixedLightingModes = SupportedRenderingFeatures.LightmapMixedBakeModes.Subtractive | 
                                      SupportedRenderingFeatures.LightmapMixedBakeModes.IndirectOnly | 
                                      SupportedRenderingFeatures.LightmapMixedBakeModes.Shadowmask,
-                //PWRD* majiao //
+                // PWRD* majiao //
 
                 lightmapBakeTypes = LightmapBakeType.Baked | LightmapBakeType.Mixed,
                 lightmapsModes = LightmapsMode.CombinedDirectional | LightmapsMode.NonDirectional,

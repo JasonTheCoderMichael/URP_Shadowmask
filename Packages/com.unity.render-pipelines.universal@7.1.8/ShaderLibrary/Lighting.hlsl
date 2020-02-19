@@ -602,14 +602,12 @@ half4 UniversalFragmentPBR(InputData inputData, half3 albedo, half metallic, hal
 
     // PWRD* majiao //
     // MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, half4(0, 0, 0, 0));
-    // PWRD* majiao //
      
     half4 shadowmask = half4(0, 0, 0, 0);
 #if defined(LIGHTMAP_ON) && (defined(SHADOWS_SHADOWMASK) || defined(SHADOWS_DISTANCE_SHADOWMASK))
     shadowmask = inputData.bakedAtten;
 #endif
 
-    // PWRD* majiao //
     float shadowRangeMask = GetShadowRangeMask(inputData.shadowCoord);
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, shadowRangeMask, shadowmask);
     // mainLight.shadowAttenuation = shadowRangeMask;
@@ -645,17 +643,14 @@ half4 UniversalFragmentBlinnPhong(InputData inputData, half3 diffuse, half4 spec
 
     // PWRD* majiao //
     // MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, half4(0, 0, 0, 0));
-    // PWRD* majiao //
-
     half4 shadowmask = half4(0, 0, 0, 0);
 #if defined(LIGHTMAP_ON) && (defined(SHADOWS_SHADOWMASK) || defined(SHADOWS_DISTANCE_SHADOWMASK))
     shadowmask = inputData.bakedAtten;
 #endif
 
-    // PWRD* majiao //
     float shadowRangeMask = GetShadowRangeMask(inputData.shadowCoord);
-    // MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, shadowmask, shadowmask);
-    mainLight.shadowAttenuation = shadowRangeMask;
+     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, shadowmask, shadowmask);
+    //mainLight.shadowAttenuation = shadowRangeMask;
     // PWRD* majiao //
  
     half3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
