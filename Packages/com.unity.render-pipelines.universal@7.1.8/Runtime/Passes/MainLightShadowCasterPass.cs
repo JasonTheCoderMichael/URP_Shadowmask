@@ -178,6 +178,11 @@ namespace UnityEngine.Rendering.Universal.Internal
                 bool softShadows = shadowLight.light.shadows == LightShadows.Soft && shadowData.supportsSoftShadows;
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadows, true);
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadowCascades, shadowData.mainLightShadowCascadesCount > 1);
+
+                // PWRD* majiao //
+                CoreUtils.SetKeyword(cmd, "_USE_SCREEN_SPACE_SHADOW", shadowData.useScreenSpaceShadow);
+                // PWRD* majiao //
+
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.SoftShadows, softShadows);
 
                 SetupMainLightShadowReceiverConstants(cmd, shadowLight, softShadows);

@@ -7,8 +7,9 @@
 
 #define MAX_SHADOW_CASCADES 4
 
+// PWRD* majiao 增加判断条件 defined(_USE_SCREEN_SPACE_SHADOW) //
 #ifndef SHADOWS_SCREEN
-#if defined(_MAIN_LIGHT_SHADOWS) && defined(_MAIN_LIGHT_SHADOWS_CASCADE) && !defined(SHADER_API_GLES)
+#if defined(_MAIN_LIGHT_SHADOWS) && defined(_MAIN_LIGHT_SHADOWS_CASCADE) && !defined(SHADER_API_GLES) && defined(_USE_SCREEN_SPACE_SHADOW)
 #define SHADOWS_SCREEN 1
 #else
 #define SHADOWS_SCREEN 0
@@ -56,12 +57,6 @@ float4      _AdditionalShadowmapSize; // (xy: 1/width and 1/height, zw: width an
 float4 _ShadowBias; // x: depth bias, y: normal bias
 
 #define BEYOND_SHADOW_FAR(shadowCoord) shadowCoord.z <= 0.0 || shadowCoord.z >= 1.0
-
-float IsInRange(float3 coord)
-{
-    float3 result = coord > 0 && coord < 1;
-    return all(result);
-}
 
 struct ShadowSamplingData
 {
@@ -131,9 +126,19 @@ half SampleScreenSpaceShadowmap(float4 shadowCoord)
 }
 
 // PWRD* majiao //
-half SampleScreenSpaceShadowmap_Mask(float4 shadowCoord, out float mask)
+bool IsInRange(float3 coord)
 {
-    shadowCoord.xy /= shadowCoord.w;
+    float3 result = coord > 0 && coord < 1;
+    return all(result);
+}
+
+// TODO: 和MainLightRealtimeShadow方法合并, 只有一次采样 //
+half SampleScreenSpaceShadowRangeMask(float4 shadowCoord)
+{
+    if(shadowCoord.w != 0)
+    {
+        shadowCoord.xy /= shadowCoord.w;
+    }
 
     // The stereo transform has to happen after the manual perspective divide
     shadowCoord.xy = UnityStereoTransformScreenSpaceTex(shadowCoord.xy);
@@ -144,8 +149,20 @@ half SampleScreenSpaceShadowmap_Mask(float4 shadowCoord, out float mask)
     half2 attenAndMask = SAMPLE_TEXTURE2D(_ScreenSpaceShadowmapTexture, sampler_ScreenSpaceShadowmapTexture, shadowCoord.xy).rg;
 #endif
 
-    mask = attenAndMask.g;
-    return attenAndMask.r;
+    return attenAndMask.g;
+}
+
+float GetShadowRangeMask(float4 shadowCoord)
+{
+    #if SHADOWS_SCREEN
+    {
+        return SampleScreenSpaceShadowRangeMask(shadowCoord);
+    }
+    #else
+    {
+        return IsInRange(shadowCoord.xyz) ? 0 : 1;
+    }
+    #endif
 }
 //PWRD* majiao //
 
@@ -239,25 +256,7 @@ half MainLightRealtimeShadow(float4 shadowCoord)
 #else
     ShadowSamplingData shadowSamplingData = GetMainLightShadowSamplingData();
     half4 shadowParams = GetMainLightShadowParams();
-    return SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture), shadowCoord, shadowSamplingData, shadowParams, false);
-#endif
-}
-
-// PWRD* majiao //
-half MainLightRealtimeShadow(float4 shadowCoord, out float mask)
-{
-    mask = 1;
-
-#if !defined(_MAIN_LIGHT_SHADOWS) || defined(_RECEIVE_SHADOWS_OFF)
-    return 1.0h;
-#endif
-
-#if SHADOWS_SCREEN
-    return SampleScreenSpaceShadowmap_Mask(shadowCoord, mask);
-#else
-    ShadowSamplingData shadowSamplingData = GetMainLightShadowSamplingData();
-    half4 shadowParams = GetMainLightShadowParams();
-    return SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture), shadowCoord, shadowSamplingData, shadowParams, false);
+    return SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture), shadowCoord, shadowSamplingData, shadowParams, true);
 #endif
 }
 
