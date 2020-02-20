@@ -180,7 +180,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadowCascades, shadowData.mainLightShadowCascadesCount > 1);
 
                 // PWRD* majiao //
-                CoreUtils.SetKeyword(cmd, "_USE_SCREEN_SPACE_SHADOW", shadowData.useScreenSpaceShadow);
+                CoreUtils.SetKeyword(cmd, "_TRADITIONAL_SHADOW", shadowData.useTraditionalShadow);
                 // PWRD* majiao //
 
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.SoftShadows, softShadows);

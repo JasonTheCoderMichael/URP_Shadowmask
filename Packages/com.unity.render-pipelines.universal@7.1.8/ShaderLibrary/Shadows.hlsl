@@ -7,9 +7,9 @@
 
 #define MAX_SHADOW_CASCADES 4
 
-// PWRD* majiao 增加判断条件 defined(_USE_SCREEN_SPACE_SHADOW) //
+// PWRD* majiao 增加判断条件 defined(_TRADITIONAL_SHADOW) //
 #ifndef SHADOWS_SCREEN
-#if defined(_MAIN_LIGHT_SHADOWS) && defined(_MAIN_LIGHT_SHADOWS_CASCADE) && !defined(SHADER_API_GLES) && defined(_USE_SCREEN_SPACE_SHADOW)
+#if defined(_MAIN_LIGHT_SHADOWS) && defined(_MAIN_LIGHT_SHADOWS_CASCADE) && !defined(SHADER_API_GLES) && !defined(_TRADITIONAL_SHADOW)
 #define SHADOWS_SCREEN 1
 #else
 #define SHADOWS_SCREEN 0

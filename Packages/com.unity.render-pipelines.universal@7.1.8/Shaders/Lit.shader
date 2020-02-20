@@ -106,7 +106,7 @@ Shader "Universal Render Pipeline/Lit"
             #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
             // PWRD* majiao //
             #pragma multi_compile _ SHADOWS_SHADOWMASK SHADOWS_DISTANCE_SHADOWMASK
-            #pragma multi_compile _ _USE_SCREEN_SPACE_SHADOW
+            #pragma multi_compile _ _TRADITIONAL_SHADOW
             // PWRD* majiao //
             
             // -------------------------------------

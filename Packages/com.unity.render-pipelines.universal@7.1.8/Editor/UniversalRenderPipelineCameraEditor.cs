@@ -34,6 +34,9 @@ namespace UnityEditor.Rendering.Universal
             public static GUIContent cameraType = EditorGUIUtility.TrTextContent("Render Mode", "Controls which type of camera this is.");
             public static GUIContent cameraOutput = EditorGUIUtility.TrTextContent("Output Target", "Controls where we are rendering the output to.");
             public static GUIContent renderingShadows = EditorGUIUtility.TrTextContent("Render Shadows", "Makes this camera render shadows.");
+            // pwrd* majiao //
+            public static GUIContent useTraditionalShadow = EditorGUIUtility.TrTextContent("Use Traditional Shadow", "Makes this camera use traditional shadow.");
+            // pwrd* majiao //
             public static GUIContent requireDepthTexture = EditorGUIUtility.TrTextContent("Depth Texture", "On makes this camera create a _CameraDepthTexture, which is a copy of the rendered depth values.\nOff makes the camera not create a depth texture.\nUse Pipeline Settings applies settings from the Render Pipeline Asset.");
             public static GUIContent requireOpaqueTexture = EditorGUIUtility.TrTextContent("Opaque Texture", "On makes this camera create a _CameraOpaqueTexture, which is a copy of the rendered view.\nOff makes the camera not create an opaque texture.\nUse Pipeline Settings applies settings from the Render Pipeline Asset.");
             public static GUIContent allowMSAA = EditorGUIUtility.TrTextContent("MSAA", "Use Multi Sample Anti-Aliasing to reduce aliasing.");
@@ -143,7 +146,7 @@ namespace UnityEditor.Rendering.Universal
         SavedBool m_StackSettingsFoldout;
 
         //PWRD* majiao //
-        SavedBool m_useScreenSpaceShadow;
+        SavedBool m_useTraditionalShadow;
         //PWRD* majiao //
 
         // Animation Properties
@@ -162,7 +165,7 @@ namespace UnityEditor.Rendering.Universal
 
         SerializedProperty m_AdditionalCameraDataRenderShadowsProp;
         // PWRD* majiao //
-        SerializedProperty m_AdditionalCameraDataUseCascadeShadowsProp;
+        SerializedProperty m_AdditionalCameraDataUseTraditionalShadowsProp;
         // PWRD* majiao //
         SerializedProperty m_AdditionalCameraDataRenderDepthProp;
         SerializedProperty m_AdditionalCameraDataRenderOpaqueProp;
@@ -232,7 +235,7 @@ namespace UnityEditor.Rendering.Universal
             m_RenderingSettingsFoldout = new SavedBool($"{target.GetType()}.RenderingSettingsFoldout", false);
             m_StackSettingsFoldout = new SavedBool($"{target.GetType()}.StackSettingsFoldout", false);
             // PWRD* majiao //
-            m_useScreenSpaceShadow = new SavedBool($"{target.GetType()}.UseShadowCascade", false);
+            m_useTraditionalShadow = new SavedBool($"{target.GetType()}.UseShadowCascade", false);
             // PWRD* majiao //
             m_AdditionalCameraData = camera.gameObject.GetComponent<UniversalAdditionalCameraData>();
             m_ErrorIcon = EditorGUIUtility.Load("icons/console.erroricon.sml.png") as Texture2D;
@@ -408,7 +411,7 @@ namespace UnityEditor.Rendering.Universal
             m_AdditionalCameraDataSO = new SerializedObject(additionalCameraData);
             m_AdditionalCameraDataRenderShadowsProp = m_AdditionalCameraDataSO.FindProperty("m_RenderShadows");
             // PWRD* majiao //
-            m_AdditionalCameraDataUseCascadeShadowsProp = m_AdditionalCameraDataSO.FindProperty("m_useScreenSpaceShadow");
+            m_AdditionalCameraDataUseTraditionalShadowsProp = m_AdditionalCameraDataSO.FindProperty("m_useTraditionalShadow");
             // PWRD* majiao //
             m_AdditionalCameraDataRenderDepthProp = m_AdditionalCameraDataSO.FindProperty("m_RequiresDepthTextureOption");
             m_AdditionalCameraDataRenderOpaqueProp = m_AdditionalCameraDataSO.FindProperty("m_RequiresOpaqueTextureOption");
@@ -1045,13 +1048,15 @@ namespace UnityEditor.Rendering.Universal
             // PWRD* majiao //
             if (selectedValueShadows)
             {
-                Rect useScreenSpaceShadowRect = EditorGUILayout.GetControlRect(true);
-                EditorGUI.BeginProperty(useScreenSpaceShadowRect, Styles.renderingShadows, m_AdditionalCameraDataUseCascadeShadowsProp);
+                Rect useTraditionalShadowRect = EditorGUILayout.GetControlRect(true);
+                EditorGUI.BeginProperty(useTraditionalShadowRect, Styles.useTraditionalShadow, m_AdditionalCameraDataUseTraditionalShadowsProp);
                 EditorGUI.BeginChangeCheck();
-                m_useScreenSpaceShadow.value = EditorGUI.Toggle(useScreenSpaceShadowRect, new GUIContent("Screen Space Shadow"), m_useScreenSpaceShadow.value);
+                EditorGUI.indentLevel++;
+                m_useTraditionalShadow.value = EditorGUI.Toggle(useTraditionalShadowRect, Styles.useTraditionalShadow, m_useTraditionalShadow.value);
+                EditorGUI.indentLevel--;
                 if (EditorGUI.EndChangeCheck())
                 {
-                    m_AdditionalCameraDataUseCascadeShadowsProp.boolValue = m_useScreenSpaceShadow.value;
+                    m_AdditionalCameraDataUseTraditionalShadowsProp.boolValue = m_useTraditionalShadow.value;
                     m_AdditionalCameraDataSO.ApplyModifiedProperties();
                 }
                 EditorGUI.EndProperty();
