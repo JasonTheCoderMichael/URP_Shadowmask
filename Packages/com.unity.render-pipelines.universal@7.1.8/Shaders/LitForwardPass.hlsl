@@ -18,7 +18,8 @@ struct Varyings
     float2 uv                       : TEXCOORD0;
     DECLARE_LIGHTMAP_OR_SH(lightmapUV, vertexSH, 1);
 
-#ifdef _ADDITIONAL_LIGHTS
+// pwrd majiao: frag阶段计算shadowCoord //
+#if defined(_ADDITIONAL_LIGHTS) || defined(_TRADITIONAL_SHADOW)
     float3 positionWS               : TEXCOORD2;
 #endif
 
@@ -46,7 +47,8 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 {
     inputData = (InputData)0;
 
-#ifdef _ADDITIONAL_LIGHTS
+// pwrd majiao: frag阶段计算shadowCoord //
+#if defined(_ADDITIONAL_LIGHTS) || defined(_TRADITIONAL_SHADOW)
     inputData.positionWS = input.positionWS;
 #endif
 
@@ -64,7 +66,13 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 
     inputData.viewDirectionWS = viewDirWS;
 #if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
-    inputData.shadowCoord = input.shadowCoord;
+    //* pwrd majiao: frag阶段计算shadowCoord //
+    #if defined(_TRADITIONAL_SHADOW)
+        inputData.shadowCoord = TransformWorldToShadowCoord(input.positionWS);
+    #else
+        inputData.shadowCoord = input.shadowCoord;
+    #endif
+    //* pwrd majiao //
 #else
     inputData.shadowCoord = float4(0, 0, 0, 0);
 #endif
@@ -114,11 +122,13 @@ Varyings LitPassVertex(Attributes input)
 
     output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
 
-#ifdef _ADDITIONAL_LIGHTS
+//* pwrd majiao: frag阶段计算shadowCoord //
+#if defined(_ADDITIONAL_LIGHTS) || defined(_TRADITIONAL_SHADOW)
     output.positionWS = vertexInput.positionWS;
 #endif
 
-#if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
+//* pwrd majiao: frag阶段计算shadowCoord //
+#if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF) && !defined(_TRADITIONAL_SHADOW)
     output.shadowCoord = GetShadowCoord(vertexInput);
 #endif
 

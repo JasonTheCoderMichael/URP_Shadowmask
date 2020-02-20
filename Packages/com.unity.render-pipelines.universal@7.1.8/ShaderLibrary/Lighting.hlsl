@@ -649,8 +649,7 @@ half4 UniversalFragmentBlinnPhong(InputData inputData, half3 diffuse, half4 spec
 #endif
 
     float shadowRangeMask = GetShadowRangeMask(inputData.shadowCoord);
-     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, shadowmask, shadowmask);
-    //mainLight.shadowAttenuation = shadowRangeMask;
+    MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, shadowRangeMask, shadowmask);
     // PWRD* majiao //
  
     half3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
