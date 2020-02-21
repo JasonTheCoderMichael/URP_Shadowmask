@@ -179,9 +179,9 @@ namespace UnityEngine.Rendering.Universal.Internal
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadows, true);
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadowCascades, shadowData.mainLightShadowCascadesCount > 1);
 
-                // PWRD* majiao //
+                //* pwrd majiao: frag阶段计算shadowCoord //
                 CoreUtils.SetKeyword(cmd, "_TRADITIONAL_SHADOW", shadowData.useTraditionalShadow);
-                // PWRD* majiao //
+                //* pwrd majiao //
 
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.SoftShadows, softShadows);
 

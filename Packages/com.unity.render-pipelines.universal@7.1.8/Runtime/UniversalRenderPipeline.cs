@@ -299,9 +299,9 @@ namespace UnityEngine.Rendering.Universal
             if (additionalCameraData != null)
             {
                 cameraData.maxShadowDistance = (additionalCameraData.renderShadows) ? cameraData.maxShadowDistance : 0.0f;
-                // PWRD* majiao //
+                //* pwrd majiao: frag阶段计算shadowCoord //
                 cameraData.useTraditionalShadow = additionalCameraData.useTraditionalShadow;
-                // PWRD* majiao //
+                //* pwrd majiao //
                 cameraData.requiresDepthTexture = additionalCameraData.requiresDepthTexture;
                 cameraData.requiresOpaqueTexture = additionalCameraData.requiresColorTexture;
                 cameraData.volumeLayerMask = additionalCameraData.volumeLayerMask;
@@ -392,6 +392,7 @@ namespace UnityEngine.Rendering.Universal
             renderingData.cullResults = cullResults;
             renderingData.cameraData = cameraData;
             InitializeLightData(settings, visibleLights, mainLightIndex, out renderingData.lightData);
+            // pwrd majiao: frag阶段计算shadowCoord //
             InitializeShadowData(settings, visibleLights, mainLightCastShadows, additionalLightsCastShadows && !renderingData.lightData.shadeAdditionalLightsPerVertex, cameraData.useTraditionalShadow, out renderingData.shadowData);
             InitializePostProcessingData(settings, out renderingData.postProcessingData);
             renderingData.supportsDynamicBatching = settings.supportsDynamicBatching;
@@ -472,9 +473,9 @@ namespace UnityEngine.Rendering.Universal
             shadowData.additionalLightsShadowmapWidth = shadowData.additionalLightsShadowmapHeight = settings.additionalLightsShadowmapResolution;
             shadowData.supportsSoftShadows = settings.supportsSoftShadows && (shadowData.supportsMainLightShadows || shadowData.supportsAdditionalLightShadows);
             shadowData.shadowmapDepthBufferBits = 16;
-            // PWRD* majiao //
+            //* pwrd majiao: frag阶段计算shadowCoord //
             shadowData.useTraditionalShadow = useTraditionalShadow;
-            // PWRD* majiao //
+            //* pwrd majiao //
         }
 
         static void InitializePostProcessingData(UniversalRenderPipelineAsset settings, out PostProcessingData postProcessingData)

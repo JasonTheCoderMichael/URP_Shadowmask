@@ -70,9 +70,9 @@ namespace UnityEngine.Rendering.Universal
         public AntialiasingMode antialiasing;
         public AntialiasingQuality antialiasingQuality;
 
-        // PWRD* majiao //
+        //* pwrd majiao: frag阶段计算shadowCoord //
         public bool useTraditionalShadow;
-        // PWRD* majiao //
+        //* pwrd majiao //
     }
 
     [MovedFrom("UnityEngine.Rendering.LWRP")] public struct ShadowData
@@ -89,9 +89,9 @@ namespace UnityEngine.Rendering.Universal
         public bool supportsSoftShadows;
         public int shadowmapDepthBufferBits;
         public List<Vector4> bias;
-        // PWRD* majiao //
+        //* pwrd majiao: frag阶段计算shadowCoord //
         public bool useTraditionalShadow;
-        // PWRD* majiao //
+        //* pwrd majiao //
     }
 
     public struct PostProcessingData

@@ -78,11 +78,11 @@ namespace UnityEngine.Rendering.Universal
         [FormerlySerializedAs("renderShadows"), SerializeField]
         bool m_RenderShadows = true;
 
-        // PWRD* majiao //
+        //* pwrd majiao: frag阶段计算shadowCoord //
         [Tooltip("If enabled it will use Tradition Shadow,otherwise it will use Screen Space Shadow, which is the default shadow in URP.")]
         [FormerlySerializedAs("useTraditionalShadow"), SerializeField]
         bool m_useTraditionalShadow = true;
-        // PWRD* majiao //
+        //* pwrd majiao //
 
         [Tooltip("If enabled depth texture will render for this camera bound as _CameraDepthTexture.")]
         [SerializeField]
@@ -135,13 +135,13 @@ namespace UnityEngine.Rendering.Universal
             set => m_RenderShadows = value;
         }
 
-        // PWRD* majiao //
+        //* pwrd majiao: frag阶段计算shadowCoord //
         public bool useTraditionalShadow
         {
             get => m_useTraditionalShadow;
             set => m_useTraditionalShadow = value;
         }
-        // PWRD* majiao //
+        //* pwrd majiao //
 
         public CameraOverrideOption requiresDepthOption
         {

@@ -104,10 +104,12 @@ Shader "Universal Render Pipeline/Lit"
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
-            // PWRD* majiao //
+
+            //* pwrd majiao //
             #pragma multi_compile _ SHADOWS_SHADOWMASK SHADOWS_DISTANCE_SHADOWMASK
+
+            // pwrd majiao: frag阶段计算shadowCoord //
             #pragma multi_compile _ _TRADITIONAL_SHADOW
-            // PWRD* majiao //
             
             // -------------------------------------
             // Unity defined keywords

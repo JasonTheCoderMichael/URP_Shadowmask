@@ -34,9 +34,9 @@ namespace UnityEditor.Rendering.Universal
             public static GUIContent cameraType = EditorGUIUtility.TrTextContent("Render Mode", "Controls which type of camera this is.");
             public static GUIContent cameraOutput = EditorGUIUtility.TrTextContent("Output Target", "Controls where we are rendering the output to.");
             public static GUIContent renderingShadows = EditorGUIUtility.TrTextContent("Render Shadows", "Makes this camera render shadows.");
-            // pwrd* majiao //
+            //* pwrd majiao: frag阶段计算shadowCoord //
             public static GUIContent useTraditionalShadow = EditorGUIUtility.TrTextContent("Use Traditional Shadow", "Makes this camera use traditional shadow.");
-            // pwrd* majiao //
+            //* pwrd majiao //
             public static GUIContent requireDepthTexture = EditorGUIUtility.TrTextContent("Depth Texture", "On makes this camera create a _CameraDepthTexture, which is a copy of the rendered depth values.\nOff makes the camera not create a depth texture.\nUse Pipeline Settings applies settings from the Render Pipeline Asset.");
             public static GUIContent requireOpaqueTexture = EditorGUIUtility.TrTextContent("Opaque Texture", "On makes this camera create a _CameraOpaqueTexture, which is a copy of the rendered view.\nOff makes the camera not create an opaque texture.\nUse Pipeline Settings applies settings from the Render Pipeline Asset.");
             public static GUIContent allowMSAA = EditorGUIUtility.TrTextContent("MSAA", "Use Multi Sample Anti-Aliasing to reduce aliasing.");
@@ -145,9 +145,9 @@ namespace UnityEditor.Rendering.Universal
         SavedBool m_RenderingSettingsFoldout;
         SavedBool m_StackSettingsFoldout;
 
-        //PWRD* majiao //
+        //* pwrd majiao: frag阶段计算shadowCoord //
         SavedBool m_useTraditionalShadow;
-        //PWRD* majiao //
+        //* pwrd majiao //
 
         // Animation Properties
         public bool isSameClearFlags { get { return !settings.clearFlags.hasMultipleDifferentValues; } }
@@ -164,9 +164,9 @@ namespace UnityEditor.Rendering.Universal
         readonly AnimBool m_ShowTargetEyeAnim = new AnimBool();
 
         SerializedProperty m_AdditionalCameraDataRenderShadowsProp;
-        // PWRD* majiao //
+        //* pwrd majiao: frag阶段计算shadowCoord //
         SerializedProperty m_AdditionalCameraDataUseTraditionalShadowsProp;
-        // PWRD* majiao //
+        //* pwrd majiao //
         SerializedProperty m_AdditionalCameraDataRenderDepthProp;
         SerializedProperty m_AdditionalCameraDataRenderOpaqueProp;
         SerializedProperty m_AdditionalCameraDataRendererProp;
@@ -234,9 +234,9 @@ namespace UnityEditor.Rendering.Universal
             m_OutputSettingsFoldout = new SavedBool($"{target.GetType()}.OutputSettingsFoldout", false);
             m_RenderingSettingsFoldout = new SavedBool($"{target.GetType()}.RenderingSettingsFoldout", false);
             m_StackSettingsFoldout = new SavedBool($"{target.GetType()}.StackSettingsFoldout", false);
-            // PWRD* majiao //
+            //* pwrd majiao: frag阶段计算shadowCoord //
             m_useTraditionalShadow = new SavedBool($"{target.GetType()}.UseShadowCascade", false);
-            // PWRD* majiao //
+            //* pwrd majiao //
             m_AdditionalCameraData = camera.gameObject.GetComponent<UniversalAdditionalCameraData>();
             m_ErrorIcon = EditorGUIUtility.Load("icons/console.erroricon.sml.png") as Texture2D;
             validCameras.Clear();
@@ -410,9 +410,9 @@ namespace UnityEditor.Rendering.Universal
 
             m_AdditionalCameraDataSO = new SerializedObject(additionalCameraData);
             m_AdditionalCameraDataRenderShadowsProp = m_AdditionalCameraDataSO.FindProperty("m_RenderShadows");
-            // PWRD* majiao //
+            //* pwrd majiao: frag阶段计算shadowCoord //
             m_AdditionalCameraDataUseTraditionalShadowsProp = m_AdditionalCameraDataSO.FindProperty("m_useTraditionalShadow");
-            // PWRD* majiao //
+            //* pwrd majiao //
             m_AdditionalCameraDataRenderDepthProp = m_AdditionalCameraDataSO.FindProperty("m_RequiresDepthTextureOption");
             m_AdditionalCameraDataRenderOpaqueProp = m_AdditionalCameraDataSO.FindProperty("m_RequiresOpaqueTextureOption");
             m_AdditionalCameraDataRendererProp = m_AdditionalCameraDataSO.FindProperty("m_RendererIndex");
@@ -1045,7 +1045,7 @@ namespace UnityEditor.Rendering.Universal
             }
             EditorGUI.EndProperty();
 
-            // PWRD* majiao //
+            //* pwrd majiao: frag阶段计算shadowCoord //
             if (selectedValueShadows)
             {
                 Rect useTraditionalShadowRect = EditorGUILayout.GetControlRect(true);
@@ -1061,7 +1061,7 @@ namespace UnityEditor.Rendering.Universal
                 }
                 EditorGUI.EndProperty();
             }
-            // PWRD* majiao //
+            //* pwrd majiao //
         }
 
         void DrawVRSettings()

@@ -7,7 +7,7 @@
 
 #define MAX_SHADOW_CASCADES 4
 
-// PWRD* majiao 增加判断条件 defined(_TRADITIONAL_SHADOW) //
+//* pwrd majiao: frag阶段计算shadowCoord //
 #ifndef SHADOWS_SCREEN
 #if defined(_MAIN_LIGHT_SHADOWS) && defined(_MAIN_LIGHT_SHADOWS_CASCADE) && !defined(SHADER_API_GLES) && !defined(_TRADITIONAL_SHADOW)
 #define SHADOWS_SCREEN 1
