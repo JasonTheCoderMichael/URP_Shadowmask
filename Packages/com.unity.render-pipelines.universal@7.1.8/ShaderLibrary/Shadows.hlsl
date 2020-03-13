@@ -128,7 +128,7 @@ half SampleScreenSpaceShadowmap(float4 shadowCoord)
 // PWRD* majiao //
 bool IsInRange(float3 coord)
 {
-    float3 result = coord > 0 && coord < 1;
+    float3 result = (coord > 0 && coord < 1);
     return all(result);
 }
 
@@ -152,18 +152,40 @@ half SampleScreenSpaceShadowRangeMask(float4 shadowCoord)
     return attenAndMask.g;
 }
 
+float Min(float3 value)
+{
+    return min(min(value.x, value.y), value.z);
+}
+
+float GetShadowRange_Traditional(float3 shadowCoord)
+{
+    // return IsInRange(shadowCoord) ? 0 : 1;
+
+    float transition = 0.02;
+    float3 range1 = smoothstep(0, transition.xxx, shadowCoord.xyz);
+    float3 range2 = smoothstep(1, 1 - transition.xxx, shadowCoord.xyz);
+    float3 range = range1 + range2 - 1;
+    return 1 - Min(range);
+}
+
+float GetShadowRange_ScreenSpace(float4 shadowCoord)
+{
+    return SampleScreenSpaceShadowRangeMask(shadowCoord);
+}
+
 float GetShadowRangeMask(float4 shadowCoord)
 {
     #if SHADOWS_SCREEN
     {
-        return SampleScreenSpaceShadowRangeMask(shadowCoord);
+        return GetShadowRange_ScreenSpace(shadowCoord);
     }
     #else
     {
-        return IsInRange(shadowCoord.xyz) ? 0 : 1;
+        return GetShadowRange_Traditional(shadowCoord.xyz);
     }
     #endif
 }
+
 //PWRD* majiao //
 
 real SampleShadowmapFiltered(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord, ShadowSamplingData samplingData)
